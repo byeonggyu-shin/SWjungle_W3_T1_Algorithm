@@ -1,7 +1,7 @@
 # 그래프 탐색 기본 (하) - 연결 요소의 개수
 
 import sys
-
+sys.setrecursionlimit(10**6)  
 
 n,m =map(int, sys.stdin.readline().split())
 
@@ -13,10 +13,8 @@ for _ in range(m):
     graph[u].append(v)
     graph[v].append(u)
 
-
 visited = [False] * (n + 1)
 connected_components = 0
-
 
 def dfs(graph, node):
     
@@ -26,7 +24,6 @@ def dfs(graph, node):
     for neighbor in graph[node]:
         if not visited[neighbor]:
             dfs(graph, neighbor)
-
 
 # 모든 노드를 순회하면서 아직 방문하지 않은 노드를 시작점으로 깊이 우선 탐색(DFS) 또는 너비 우선 탐색(BFS)을 수행합니다.
 for node in range(1, n+1):
