@@ -27,6 +27,6 @@ result = [0] * (n+1)
 
 
 dfs(1, 0, graph, visited, result)
-
+print(result)
 for i in range(2, n+1):
     print(result[i])

@@ -1,4 +1,5 @@
-#최소 스패닝 트리:
+#최소 스패닝 트리
+import heapq
 import sys
 sys.setrecursionlimit(10 ** 6)
 input = sys.stdin.readline
@@ -26,15 +27,11 @@ result = 0
 #노드의 개수 v, 와 간선의 개수e 입력받기
 v, e = map(int, input().split())
 
-#부모 테이블 만들기
-# parent [0, 0, 0, 0]
-parent = [0] * (v + 1)
-
 # parent [0, 1, 2, 3]
-#부모 테이블 상에서 부모를 자기 자신으로 초기화
+# 부모 테이블 상에서 부모를 자기 자신으로 초기화
+parent = [0] * (v + 1)
 for i in range(1, v+1):
     parent[i]=i
-
 
 #모든 간선에 대한 정보를 입력 받기
 for _ in range(e):
@@ -52,7 +49,45 @@ for edge in edges:
     if find_parent(parent, a) != find_parent(parent, b):
         union_parent(parent, a, b)
         result += cost
-        # print(parent)
+        print(parent)
 
 print(result)
 
+# 프림알고리즘
+input = sys.stdin.readline
+
+v, e = map(int, input().split())
+cnt, hq = 0, []
+visit = [0]*(v+1)
+
+# 무방향 그래프 구성
+link = [[] for _ in range(v+1)]
+for _ in range(e):
+    a, b, c = map(int, input().split())
+    link[a].append((c, b))
+    link[b].append((c, a))
+
+# 임의의 정점을 힙에 넣음
+visit[1] = 1
+for i in link[1]:
+    heapq.heappush(hq, i)
+
+result = 0
+while hq:
+    # 간선이 총 v-1개 이루어졌다면 종료
+    if cnt == v-1:
+        break
+
+    w, node = heapq.heappop(hq)
+    if visit[node]:
+        continue
+
+    cnt += 1
+    result += w
+    visit[node] = 1
+    for i in link[node]:
+        tw, tnode = i
+        if visit[tnode]:
+            continue
+        heapq.heappush(hq, i)
+print(result)

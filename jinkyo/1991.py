@@ -1,25 +1,3 @@
-"""
-트리 순회 
-전위순회, 중위순회 ,후위순회를 구현하는 방법 연습
-input
-7
-A B C
-B D .
-C E F
-E . .
-F . G
-D . .
-G . .
-
-input이 다음과 같이 root, 왼쪽자식, 오른쪽 자식으로 주어졌을 때,
-dict를 이용해서 tree를 구성하고 원하는 순서에 따라 값 출력
-
-output
-ABDCEFG
-DBAECFG
-DBEGFCA
-
-"""
 import sys
 
 sys.setrecursionlimit(10 ** 6)
