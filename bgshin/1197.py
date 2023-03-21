@@ -6,7 +6,8 @@ def find(parent, node):
     return parent[node]
 
 def union(parent, rank, x, y):
-    root_x = find(parent, x)
+    root_x 
+    = find(parent, x)
     root_y = find(parent, y)
 
     if rank[root_x] > rank[root_y]:
