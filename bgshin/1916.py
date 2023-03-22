@@ -37,20 +37,26 @@ m = int(sys.stdin.readline())
 graph = {i: [] for i in range(1, n + 1)}
 
 for _ in range(m):
-    u, v, w = map(int, input().split())
+    u, v, w = map(int, sys.stdin.readline().split())
     graph[u].append((v, w))
                                                                
 dpr , arv = map(int, sys.stdin.readline().split())
 
+
+# 시간 초과 => graph를 생성할 때 간선이 중복되어 추가될 수 있다. 이를 수정하여 시간을 절약
+
+# for node in graph:
+#     neighbors = {}
+#     for neighbor, weight in graph[node]:
+#         if neighbor in neighbors:
+#             neighbors[neighbor] = min(neighbors[neighbor], weight)
+#         else:
+#             neighbors[neighbor] = weight
+#     graph[node] = [(k, v) for k, v in neighbors.items()]
+
+
 distance = dijkstra(dpr)
-
 print(distance[arv])
-
-# for i in range(1,n+1):
-#     if distance[i] == int(1e9):
-#         print()
-#     else:
-#         print()        
 
 
 

@@ -60,59 +60,56 @@ cnt = 0
 print(bfs(cnt))
 
 
+import sys
+from collections import deque
 
-# import sys
-# from collections import deque
+def bfs():
+    while docci:
+        next_water = deque()
+        next_docci = deque()
 
-# def bfs(cnt):
-#     while water and docci:
-#         # 물이 차오름
-#         qlen = len(water)
-#         for _ in range(qlen):
-#             x, y = water.popleft()
+        while water:
+            x, y = water.popleft()
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                if 0 <= nx < r and 0 <= ny < c and forest[nx][ny] not in ('X', 'D', '*'):
+                    forest[nx][ny] = '*'
+                    next_water.append((nx, ny))
 
-#             for i in range(4):
-#                 nx = x + dx[i]
-#                 ny = y + dy[i]
+        while docci:
+            x, y, cnt = docci.popleft()
+            if (x, y) == end:
+                return cnt
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                if 0 <= nx < r and 0 <= ny < c and forest[nx][ny] not in ('X', '*', 'S'):
+                    forest[nx][ny] = 'S'
+                    next_docci.append((nx, ny, cnt + 1))
 
-#                 if 0 <= nx < c and 0 <= ny < r and forest[nx][ny] != 'X' and forest[nx][ny] != '*':
-#                     forest[nx][ny] = '*'
-#                     water.append((nx, ny))
+        water.extend(next_water)
+        docci.extend(next_docci)
 
-#         qlen = len(docci)
-#         for _ in range(qlen):
-#             a, b = docci.popleft()
+    return 'KAKTUS'
 
-#             for i in range(4):
-#                 na = a + dx[i]
-#                 nb = b + dy[i]
+r, c = map(int, sys.stdin.readline().split())
 
-#                 if na == end[0] and nb == end[1]:
-#                     return cnt + 1
-#                 if 0 <= na < c and 0 <= nb < r and forest[na][nb] != 'X' and forest[na][nb] != '*' and forest[na][nb] != 'S':  
-#                     docci.append((na, nb))
-#                     forest[na][nb] = 'S'
-#         cnt += 1
+forest = [list(map(str, sys.stdin.readline().strip())) for _ in range(r)]
 
-#     return 'KAKTUS'
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
-# r, c = map(int, sys.stdin.readline().split())
+water = deque()
+docci = deque()
 
-# forest = [list(input().strip()) for _ in range(r)]
+for i in range(r):
+    for j in range(c):
+        if forest[i][j] == "*":
+            water.append((i, j))
+        elif forest[i][j] == "S":
+            docci.append((i, j, 0))
+        elif forest[i][j] == "D":
+            end = (i, j)
 
-# dx = [-1, 1, 0, 0]
-# dy = [0, 0, -1, 1]
-
-# water = deque()
-# docci = deque()
-# for i in range(r):
-#     for j in range(c):
-#         if forest[i][j] == "*":
-#             water.append((i, j))
-#         elif forest[i][j] == "S":
-#             docci.append([i, j])
-#         elif forest[i][j] == "D":
-#             end = [i, j]
-
-# cnt = 0
-# print(bfs(cnt))
+print(bfs())
