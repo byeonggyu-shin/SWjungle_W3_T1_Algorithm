@@ -57,8 +57,7 @@ connect = [[] for _ in range(n + 1)]  # 연결 정보
 
 needs = [[0] * (n + 1) for _ in range(n + 1)]  # 각 제품을 만들때 필요한 부품
 
-q = deque()  # 위상 정렬
-
+q = deque()  
 degree = [0] * (n + 1)  # 진입 차수
 
 for _ in range(int(sys.stdin.readline())):

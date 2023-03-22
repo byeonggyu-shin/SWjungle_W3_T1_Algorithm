@@ -1,52 +1,66 @@
-# 그래프 탐색 기본 (하) - 최소 스페닝 트리
+#  그래프 탐색 기본 (하) - 최소 스패닝 트리
 
-def find(parent, node):
-    if parent[node] != node:
-        parent[node] = find(parent, parent[node])
-    return parent[node]
+import sys
 
-def union(parent, rank, x, y):
-    root_x 
-    = find(parent, x)
-    root_y = find(parent, y)
+# 크루스칼 알고리즘
+def find_parent(parent, x):
+    if parent[x] != x:
+        parent[x] = find_parent(parent, parent[x])
+    return parent[x]
 
-    if rank[root_x] > rank[root_y]:
-        parent[root_y] = root_x
+def union_parent(parent, a, b):
+    a = find_parent(parent, a)
+    b = find_parent(parent, b)
+    if a < b:
+        parent[b] = a
     else:
-        parent[root_x] = root_y
-        if rank[root_x] == rank[root_y]:
-            rank[root_y] += 1
+        parent[a] = b
 
-def kruskal_algorithm(graph):
-    edges = []
-    for node in graph:
-        for neighbor, weight in graph[node]:
-            edges.append((weight, node, neighbor))
+V, E = map(int, sys.stdin.readline().split())
+parent = [i for i in range(V + 1)]
+edges = []
 
-    edges.sort()
+for _ in range(E):
+    a, b, cost = map(int, sys.stdin.readline().split())
+    edges.append((cost, a, b))
 
-    parent = {node: node for node in graph}
-    rank = {node: 0 for node in graph}
+edges.sort()
 
-    mst = []
+result = 0
+for edge in edges:
+    cost, a, b = edge
+    if find_parent(parent, a) != find_parent(parent, b):
+        union_parent(parent, a, b)
+        result += cost
 
-    for edge in edges:
-        weight, src, dest = edge
-        if find(parent, src) != find(parent, dest):
-            mst.append(edge)
-            union(parent, rank, src, dest)
+print(result)
 
-    return mst
 
-graph = {
-    'A': [('B', 7), ('D', 5)],
-    'B': [('A', 7), ('C', 8), ('D', 9), ('E', 7)],
-    'C': [('B', 8), ('E', 5)],
-    'D': [('A', 5), ('B', 9), ('E', 7), ('F', 6)],
-    'E': [('B', 7), ('C', 5), ('D', 7), ('F', 8), ('G', 9)],
-    'F': [('D', 6), ('E', 8), ('G', 11)],
-    'G': [('E', 9), ('F', 11)]
-}
+# 프림 알고리즘
+import sys
+import heapq
 
-mst = kruskal_algorithm(graph)
-print("Edges in the minimum spanning tree are:", mst)
+V, E = map(int, sys.stdin.readline().split())
+graph = [[] for _ in range(V + 1)]
+
+for _ in range(E):
+    a, b, cost = map(int, sys.stdin.readline().split())
+    graph[a].append((cost, b))
+    graph[b].append((cost, a))
+
+visited = [False] * (V + 1)
+queue = [(0, 1)]  # (cost, vertex)
+result = 0
+
+while queue:
+    cost, vertex = heapq.heappop(queue)
+
+    if not visited[vertex]:
+        visited[vertex] = True
+        result += cost
+
+        for next_cost, next_vertex in graph[vertex]:
+            if not visited[next_vertex]:
+                heapq.heappush(queue, (next_cost, next_vertex))
+
+print(result)
