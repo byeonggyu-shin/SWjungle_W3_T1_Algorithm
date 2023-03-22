@@ -2,8 +2,6 @@ import sys
 sys.setrecursionlimit(10 ** 6)
 input = sys.stdin.readline
 # idx==n이되면, 현재값이 최소, 최대인지 검사하고, 재귀를 종료
-# https://youtu.be/uNvcqpVEQXY
-# https://youtu.be/ok9Pakfkd70
 
 N = int(input())
 num = list(map(int, input().split()))

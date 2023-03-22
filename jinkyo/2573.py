@@ -2,127 +2,93 @@
 빙산
 dfs
 """
+# 내코드 - 시간초과
 import sys
+sys.setrecursionlimit(10 ** 9)
+input = sys.stdin.readline
 
 n, m = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(n)]
+direction = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+year = -1
 
-dx = [1, 0, -1, 0]
-dy = [0, 1, 0, -1]
 
-arr = []
-for _ in range(n):
-    arr.append(list(map(int, sys.stdin.readline().rstrip().split())))
+def dfs(x, y, visited, melt_candidates):
+    visited[x][y] = 1
+    for i in range(4):
+        nx = x + direction[i][0]
+        ny = y + direction[i][1]
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+        if graph[nx][ny] == 0:
+            melt_candidates.append((x, y))
+        elif graph[nx][ny] != 0 and visited[nx][ny] == 0:
+            dfs(nx, ny, visited, melt_candidates)
 
-count_year = 0
+
 while True:
-
-    count_year += 1
-    count_water = [[0 for _ in range(m)] for _ in range(n)]
-
-    # 녹일 빙산 찾기
+    year += 1
+    visited = [[0]*m for _ in range(n)]
+    count = 0
+    melt_candidates = []
     for i in range(n):
         for j in range(m):
-            if arr[i][j] > 0:
-                for k in range(4):
-                    nx = i + dx[k]
-                    ny = j + dy[k]
-                    if 0 <= nx < n and 0 <= ny < m:
-                        if arr[nx][ny] == 0:
-                            count_water[i][j] += 1
-
-    # 빙산 녹임
-    for i in range(n):
-        for j in range(m):
-            if arr[i][j] > 0:
-                arr[i][j] -= count_water[i][j]
-                if arr[i][j] < 0:
-                    arr[i][j] = 0
-
-    # 빙산 카운트
-    dfs_count = 0
-    visited = [[False for _ in range(m)] for _ in range(n)]
-
-    for i in range(n):
-        for j in range(m):
-            if arr[i][j] > 0 and not visited[i][j]:
-                dfs_count += 1
-                # 이어진 빙산 방문 처리
-                visited[i][j] = True
-                queue = [[i, j]]
-                while queue:
-                    p = queue.pop()
-                    for k in range(4):
-                        nx = p[0] + dx[k]
-                        ny = p[1] + dy[k]
-                        if 0 <= nx < n and 0 <= ny < m:
-                            if arr[nx][ny] > 0 and not visited[nx][ny]:
-                                queue.append([nx, ny])
-                                visited[nx][ny] = True
-
-    # 종료 조건
-    if dfs_count > 1:
-        break
-
-    # 모두 녹은 경우
-    total = 0
-    for i in arr:
-        total += sum(i)
-
-    if total == 0:
+            if visited[i][j] == 0 and graph[i][j] != 0:
+                count += 1
+                dfs(i, j, visited, melt_candidates)
+        for (x, y) in melt_candidates:
+            graph[x][y] = max(0, graph[x][y]-1)
+        melt_candidates = []
+        if count >= 2:
+            print(year)
+            sys.exit()
+    if count == 0:
         print(0)
-        exit()
-print(count_year)
+        sys.exit()
 
-#gpt와 함께 짠 코드
 
 # import sys
-# sys.setrecursionlimit(10 ** 6)
 # input = sys.stdin.readline
+# from collections import deque
 
 # n, m = map(int, input().split())
-# graph = []  # graph[행][열]
-# for i in range(n):
-#     row = list(map(int, input().split()))
-#     graph.append(row)
+# graph = [list(map(int, input().split())) for _ in range(n)]
+# direction = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+# year = -1
 
-# direction = [[1, 0], [0, 1], [-1, 0], [0, -1]]  # 동남서북
-
-
-# def dfs(x, y, visited, sea):
-#     visited[x][y] = True
-
-#     for dx, dy in direction:
-#         nx, ny = x+dx, y+dy
-#         if nx < 0 or nx >= n or ny < 0 or ny >= m:  # 이동 가능한 범위인지 확인
-#             continue
-#         if graph[nx][ny] == 0:
-#             sea[x][y] += 1
-#         elif not visited[nx][ny]:
-#             dfs(nx, ny, visited, sea)
-
-
-# def count_iceberg():
-#     visited = [[False] * m for _ in range(n)]  # 방문 여부 체크
-#     count = 0  # 빙산 개수
-#     while True:
-#         # 바다 칸 개수 세기
-#         sea = [[0] * m for _ in range(n)]
-#         for i in range(n):
-#             for j in range(m):
-#                 if graph[i][j] != 0 and not visited[i][j]:  # 빙산이 있고, 아직 방문하지 않은 경우
-#                     count += 1  # 빙산 개수 증가
-#                     dfs(i, j, visited, sea)  # DFS 탐색 진행
-#         if count == 0:  # 빙산이 없으면 종료
-#             return 0
-#         if count >= 2:  # 빙산이 두 개 이상이면 종료
-#             return count
-
-#         # 빙산 녹이기
-#         for i in range(n):
-#             for j in range(m):
-#                 if graph[i][j] > sea[i][j]:
-#                     graph[i][j] -= sea[i][j]
-
-
-# print(count_iceberg())
+# def dfs(position, visited): #position = [x,y] 처음 발견한 빙산의 연결된 빙판 개수 반환하는 함수
+#     stack = deque()
+#     stack.append(position)
+#     x, y = position
+#     visited[x][y] = 1
+#     count = 1 # 연결된 빙판 개수 세기
     
+#     while stack:
+#         a, b = stack.pop()
+#         for i in range(4):
+#             nx = a + direction[i][0]
+#             ny = b + direction[i][1]
+#             if nx < 0 or nx >= n or ny < 0 or ny >= m: #범위 밖이면 제외
+#                 continue
+#             if graph[nx][ny] != 0 and visited[nx][ny] == 0:
+#                 count += 1
+#                 visited[nx][ny] = 1
+#                 stack.append([nx,ny])
+#     return count
+
+# visited = [[0]*m for _ in range(n)]
+
+# def first_search():
+#     for i in range(n):
+#         for j in range(m):
+#             if graph[i][j] != 0 :
+#                 return [i,j]
+
+# print(dfs(first_search(), visited))
+
+# #1년뒤 빙판 녹이는 함수
+# def ice_melt():
+
+
+
+

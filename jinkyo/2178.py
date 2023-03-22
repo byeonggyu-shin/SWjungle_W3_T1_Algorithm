@@ -8,9 +8,7 @@ n, m = map(int, input().split())
 dx = [1,0,-1,0] #동남서북 / 상하좌우
 dy = [0,1,0,-1]
 
-graph = []
-for i in range(n):
-    graph.append(list(map(int, input().rstrip())))
+graph = [list(map(int, input().rstrip())) for i in range(n)]
 
 def bfs(x,y):
     queue = deque([(x, y)])

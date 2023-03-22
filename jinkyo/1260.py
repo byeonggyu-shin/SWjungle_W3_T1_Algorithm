@@ -12,14 +12,12 @@ def dfs(start):
 
 def bfs(start):
     queue = deque([start])
-    visited[start] = True
     while queue:
 
         v = queue.popleft()
         print(v, end=" ")
         for i in graph[v]:
             if not visited[i]:
-                visited[i] = True
                 queue.append(i)
 
 
